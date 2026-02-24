@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopNova - Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e0dff0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .container {
+      display: flex;
+      width: 780px;
+      min-height: 480px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    /* PANEL IZQUIERDO */
+    .left {
+      flex: 1;
+      padding: 45px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .left h2 { font-size: 1.8rem; font-weight: 700; color: #333; margin-bottom: 20px; }
+
+    .social-row { display: flex; gap: 12px; margin-bottom: 14px; }
+    .social-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid #ddd; background: #fff; color: #555;
+      cursor: pointer; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .social-btn:hover { background: #6c3eb8; color: #fff; border-color: #6c3eb8; }
+
+    .or { font-size: 0.75rem; color: #bbb; margin-bottom: 16px; }
+
+    .form { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+
+    .field { position: relative; width: 100%; }
+    .field input {
+      width: 100%; padding: 12px 40px 12px 14px;
+      border: 1px solid #ddd; border-radius: 8px;
+      font-family: 'Poppins', sans-serif; font-size: 0.88rem; color: #333;
+      outline: none; background: #f9f9f9; transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: #6c3eb8; background: #fff; }
+    .field input.err { border-color: #e53e3e; }
+    .field input.ok  { border-color: #38a169; }
+    .field input::placeholder { color: #ccc; }
+
+    .field .ico {
+      position: absolute; right: 13px; top: 50%;
+      transform: translateY(-50%); color: #ccc; font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .field .ico:hover { color: #6c3eb8; }
+    .errmsg { font-size: 0.71rem; color: #e53e3e; min-height: 14px; display: block; }
+
+    .alert-err {
+      background: #fff5f5; border: 1px solid #fed7d7;
+      color: #c53030; border-radius: 8px; padding: 10px 14px;
+      font-size: 0.82rem; display: flex; align-items: center; gap: 8px;
+    }
+
+    .forgot { font-size: 0.78rem; color: #666; text-decoration: none; text-align: center; }
+    .forgot:hover { color: #6c3eb8; }
+
+    .btn-primary {
+      padding: 12px; background: #6c3eb8; color: #fff;
+      border: none; border-radius: 25px;
+      font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 600;
+      letter-spacing: 1px; cursor: pointer; transition: background 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-primary:hover { background: #5a2fa0; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* PANEL DERECHO */
+    .right {
+      width: 270px; flex-shrink: 0;
+      background: linear-gradient(150deg, #7b45cc 0%, #4a1f8c 100%);
+      border-radius: 16px; margin: 16px;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 40px 28px;
+    }
+    .right-inner { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .right h2 { font-size: 1.8rem; font-weight: 700; color: #fff; }
+    .right p  { font-size: 0.82rem; color: rgba(255,255,255,0.82); line-height: 1.6; }
+    .btn-outline {
+      padding: 10px 30px; background: transparent; color: #fff;
+      border: 2px solid #fff; border-radius: 25px;
+      font-family: 'Poppins', sans-serif; font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 1px; cursor: pointer; transition: all 0.2s; margin-top: 6px;
+    }
+    .btn-outline:hover { background: #fff; color: #6c3eb8; }
+
+    /* MODAL */
+    .overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .overlay.hidden { display: none !important; }
+    .modal-box {
+      background: #fff; border-radius: 20px; padding: 2rem 2.2rem;
+      width: 400px; max-width: 95vw; position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: pop 0.22s ease;
+    }
+    @keyframes pop { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+    .modal-box h3 { font-size: 1.4rem; font-weight: 700; color: #333; margin-bottom: 4px; }
+    .modal-box .sub { font-size: 0.78rem; color: #aaa; margin-bottom: 18px; }
+    .modal-form { display: flex; flex-direction: column; gap: 10px; }
+    .close-btn {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none; font-size: 1.1rem; color: #aaa; cursor: pointer;
+    }
+    .close-btn:hover { color: #333; }
+    .alert-ok {
+      background: #f0fff4; border: 1px solid #9ae6b4; color: #276749;
+      border-radius: 8px; padding: 10px 14px; font-size: 0.82rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      .container { flex-direction: column; width: 95%; min-height: auto; }
+      .right { width: auto; margin: 0 16px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- IZQUIERDO -->
+  <div class="left">
+    <h2>Sign In</h2>
+    <div class="social-row">
+      <button class="social-btn"><i class="fab fa-google"></i></button>
+      <button class="social-btn"><i class="fab fa-facebook-f"></i></button>
+      <button class="social-btn"><i class="fab fa-github"></i></button>
+      <button class="social-btn"><i class="fab fa-linkedin-in"></i></button>
+    </div>
+    <p class="or">or use your email password</p>
+
+    <form class="form" id="loginForm" novalidate>
+      <div class="field">
+        <input type="email" id="iEmail" placeholder="Email" />
+        <span class="ico"><i class="fas fa-envelope"></i></span>
+        <span class="errmsg" id="eEmail"></span>
+      </div>
+      <div class="field">
+        <input type="password" id="iPass" placeholder="Password" />
+        <span class="ico" id="togglePass"><i class="fas fa-eye-slash"></i></span>
+        <span class="errmsg" id="ePass"></span>
+      </div>
+      <div class="alert-err hidden" id="alertErr">
+        <i class="fas fa-circle-exclamation"></i>
+        <span id="alertMsg">Email o contrasena incorrectos.</span>
+      </div>
+      <a href="#" class="forgot" id="linkForgot">Forget Your Password?</a>
+      <button type="submit" class="btn-primary" id="btnSignIn">
+        <span id="btnTxt">SIGN IN</span>
+        <span id="btnSpin" class="hidden"><i class="fas fa-spinner fa-spin"></i></span>
+      </button>
+    </form>
+  </div>
+
+  <!-- DERECHO -->
+  <div class="right">
+    <div class="right-inner">
+      <h2>Hello, Friend!</h2>
+      <p>Register with your personal details to use all of site features</p>
+      <button class="btn-outline" id="btnSignUp">SIGN UP</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL REGISTRO -->
+<div class="overlay hidden" id="modalReg">
+  <div class="modal-box">
+    <button class="close-btn" id="closeReg"><i class="fas fa-xmark"></i></button>
+    <h3>Crear Cuenta</h3>
+    <p class="sub">Registrate para acceder a ShopNova</p>
+    <form class="modal-form" id="formReg" novalidate>
+      <div class="field">
+        <input type="text" id="rName" placeholder="Nombre completo" />
+        <span class="ico"><i class="fas fa-user"></i></span>
+        <span class="errmsg" id="eRName"></span>
+      </div>
+      <div class="field">
+        <input type="email" id="rEmail" placeholder="Email" />
+        <span class="ico"><i class="fas fa-envelope"></i></span>
+        <span class="errmsg" id="eREmail"></span>
+      </div>
+      <div class="field">
+        <input type="password" id="rPass" placeholder="Contrasena (min. 6 caracteres)" />
+        <span class="ico" id="toggleRPass"><i class="fas fa-eye-slash"></i></span>
+        <span class="errmsg" id="eRPass"></span>
+      </div>
+      <div class="field">
+        <input type="password" id="rPass2" placeholder="Confirmar contrasena" />
+        <span class="ico"><i class="fas fa-lock"></i></span>
+        <span class="errmsg" id="eRPass2"></span>
+      </div>
+      <div class="alert-ok hidden" id="okReg">
+        <i class="fas fa-circle-check"></i> Cuenta creada! Ahora puedes iniciar sesion.
+      </div>
+      <button type="submit" class="btn-primary">CREAR CUENTA</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL RECUPERAR -->
+<div class="overlay hidden" id="modalForgot">
+  <div class="modal-box">
+    <button class="close-btn" id="closeForgot"><i class="fas fa-xmark"></i></button>
+    <h3>Recuperar Contrasena</h3>
+    <p class="sub">Ingresa tu email registrado</p>
+    <form class="modal-form" id="formForgot" novalidate>
+      <div class="field">
+        <input type="email" id="fEmail" placeholder="Tu email" />
+        <span class="ico"><i class="fas fa-envelope"></i></span>
+        <span class="errmsg" id="eFEmail"></span>
+      </div>
+      <div class="alert-ok hidden" id="okForgot">
+        <i class="fas fa-circle-check"></i> Si el email existe, recibiras instrucciones.
+      </div>
+      <button type="submit" class="btn-primary">ENVIAR</button>
+    </form>
+  </div>
+</div>
+
+<script>
+// ================================================================
+//  USUARIOS — guardados en localStorage
+//  Formato: { name, email, password, role }
+//  role: 'admin' o 'user'
+// ================================================================
+function getUsers() {
+  return JSON.parse(localStorage.getItem('sn_users') || '[]');
+}
+function saveUsers(u) {
+  localStorage.setItem('sn_users', JSON.stringify(u));
+}
+
+// Cuentas de prueba iniciales
+(function() {
+  if (getUsers().length === 0) {
+    saveUsers([
+      { name: 'Admin',        email: 'admin@shopnova.com',   password: '123456', role: 'admin' },
+      { name: 'Usuario Demo', email: 'usuario@shopnova.com', password: '123456', role: 'user'  }
+    ]);
+  }
+})();
+
+// Si ya hay sesion activa, ir directo a la tienda
+if (localStorage.getItem('sn_session')) {
+  window.location.href = 'Pagina web (inicio).html';
+}
+
+// ================================================================
+//  HELPERS
+// ================================================================
+function get(id)  { return document.getElementById(id); }
+function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+function markErr(inputId, msgId, msg) {
+  get(inputId).classList.remove('ok'); get(inputId).classList.add('err');
+  if (msgId) get(msgId).textContent = msg;
+}
+function markOk(inputId, msgId) {
+  get(inputId).classList.remove('err'); get(inputId).classList.add('ok');
+  if (msgId) get(msgId).textContent = '';
+}
+function clear(inputId, msgId) {
+  get(inputId).classList.remove('err','ok');
+  if (msgId) get(msgId).textContent = '';
+}
+
+function togglePwd(inputId, iconEl) {
+  const inp = get(inputId);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  iconEl.querySelector('i').className = show ? 'fas fa-eye' : 'fas fa-eye-slash';
+}
+
+// ================================================================
+//  TOGGLE PASSWORD
+// ================================================================
+get('togglePass').addEventListener('click',  () => togglePwd('iPass',  get('togglePass')));
+get('toggleRPass').addEventListener('click', () => togglePwd('rPass', get('toggleRPass')));
+
+// Limpiar errores al escribir
+get('iEmail').addEventListener('input', () => clear('iEmail','eEmail'));
+get('iPass').addEventListener('input',  () => clear('iPass','ePass'));
+
+// ================================================================
+//  LOGIN
+// ================================================================
+get('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  let ok = true;
+  const email = get('iEmail').value.trim();
+  const pass  = get('iPass').value;
+
+  get('alertErr').classList.add('hidden');
+
+  if (!email)             { markErr('iEmail','eEmail','El email es obligatorio.'); ok=false; }
+  else if(!validEmail(email)){ markErr('iEmail','eEmail','Email no valido.'); ok=false; }
+  else                    { markOk('iEmail','eEmail'); }
+
+  if (!pass)              { markErr('iPass','ePass','La contrasena es obligatoria.'); ok=false; }
+  else if(pass.length<6)  { markErr('iPass','ePass','Minimo 6 caracteres.'); ok=false; }
+  else                    { markOk('iPass','ePass'); }
+
+  if (!ok) return;
+
+  // Animacion de carga
+  get('btnTxt').classList.add('hidden');
+  get('btnSpin').classList.remove('hidden');
+  get('btnSignIn').disabled = true;
+
+  setTimeout(() => {
+    get('btnTxt').classList.remove('hidden');
+    get('btnSpin').classList.add('hidden');
+    get('btnSignIn').disabled = false;
+
+    const user = getUsers().find(u =>
+      u.email.toLowerCase() === email.toLowerCase() && u.password === pass
+    );
+
+    if (user) {
+      localStorage.setItem('sn_session', JSON.stringify({
+        name: user.name, email: user.email, role: user.role
+      }));
+      window.location.href = 'Pagina web (inicio).html';
+    } else {
+      get('alertMsg').textContent = 'Email o contrasena incorrectos.';
+      get('alertErr').classList.remove('hidden');
+      markErr('iEmail','eEmail',''); markErr('iPass','ePass','');
+    }
+  }, 800);
+});
+
+// ================================================================
+//  MODAL REGISTRO
+// ================================================================
+get('btnSignUp').addEventListener('click', () => {
+  get('modalReg').classList.remove('hidden');
+  get('formReg').reset();
+  ['rName','rEmail','rPass','rPass2'].forEach(id => clear(id, 'e'+id.charAt(0).toUpperCase()+id.slice(1)));
+  get('okReg').classList.add('hidden');
+});
+get('closeReg').addEventListener('click',    () => get('modalReg').classList.add('hidden'));
+get('modalReg').addEventListener('click',    e => { if(e.target===get('modalReg')) get('modalReg').classList.add('hidden'); });
+
+get('formReg').addEventListener('submit', function(e) {
+  e.preventDefault();
+  let ok = true;
+  const name  = get('rName').value.trim();
+  const email = get('rEmail').value.trim();
+  const pass  = get('rPass').value;
+  const pass2 = get('rPass2').value;
+
+  get('okReg').classList.add('hidden');
+
+  if (!name || name.length<2) { markErr('rName','eRName','Nombre muy corto.'); ok=false; }
+  else                         { markOk('rName','eRName'); }
+
+  if (!email)                  { markErr('rEmail','eREmail','El email es obligatorio.'); ok=false; }
+  else if(!validEmail(email))  { markErr('rEmail','eREmail','Email no valido.'); ok=false; }
+  else {
+    const existe = getUsers().find(u => u.email.toLowerCase()===email.toLowerCase());
+    if (existe) { markErr('rEmail','eREmail','Este email ya esta registrado.'); ok=false; }
+    else          { markOk('rEmail','eREmail'); }
+  }
+
+  if (!pass || pass.length<6) { markErr('rPass','eRPass','Minimo 6 caracteres.'); ok=false; }
+  else                         { markOk('rPass','eRPass'); }
+
+  if (!pass2)       { markErr('rPass2','eRPass2','Confirma tu contrasena.'); ok=false; }
+  else if(pass!==pass2){ markErr('rPass2','eRPass2','Las contrasenas no coinciden.'); ok=false; }
+  else               { markOk('rPass2','eRPass2'); }
+
+  if (!ok) return;
+
+  // Guardar nuevo usuario (siempre con rol 'user')
+  const users = getUsers();
+  users.push({ name, email, password: pass, role: 'user' });
+  saveUsers(users);
+
+  get('okReg').classList.remove('hidden');
+  get('formReg').reset();
+
+  setTimeout(() => {
+    get('modalReg').classList.add('hidden');
+    get('okReg').classList.add('hidden');
+    get('iEmail').value = email;
+    markOk('iEmail','eEmail');
+  }, 2000);
+});
+
+// ================================================================
+//  MODAL RECUPERAR
+// ================================================================
+get('linkForgot').addEventListener('click', e => {
+  e.preventDefault();
+  get('modalForgot').classList.remove('hidden');
+  get('formForgot').reset();
+  clear('fEmail','eFEmail');
+  get('okForgot').classList.add('hidden');
+});
+get('closeForgot').addEventListener('click',   () => get('modalForgot').classList.add('hidden'));
+get('modalForgot').addEventListener('click',   e => { if(e.target===get('modalForgot')) get('modalForgot').classList.add('hidden'); });
+
+get('formForgot').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const email = get('fEmail').value.trim();
+  get('okForgot').classList.add('hidden');
+
+  if (!email)              { markErr('fEmail','eFEmail','Ingresa tu email.'); return; }
+  if (!validEmail(email))  { markErr('fEmail','eFEmail','Email no valido.'); return; }
+
+  markOk('fEmail','eFEmail');
+  // En produccion aqui se enviaria el correo
+  const u = getUsers().find(u => u.email.toLowerCase()===email.toLowerCase());
+  if (u) console.log('[ShopNova Demo] Contrasena:', u.password);
+
+  get('okForgot').classList.remove('hidden');
+  setTimeout(() => {
+    get('modalForgot').classList.add('hidden');
+    get('okForgot').classList.add('hidden');
+  }, 2500);
+});
+</script>
+</body>
+</html>
