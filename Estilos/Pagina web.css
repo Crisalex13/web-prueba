@@ -11,10 +11,95 @@
       --fb:'DM Sans',sans-serif;
     }
 
-        /* imagenes tipo clase  */
-    .logo{
+    /* imagenes tipo clase  */
+    .logoleon{
         width: 80px; height: 70px; border-radius: 50%;
     }
+
+    /* menu*/
+    body{
+    margin:0;
+    height:100vh;
+    background: linear-gradient(120deg,#1e1e2f,#2a2a40);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar{
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 70px;
+    height: 320px;
+    background: linear-gradient(180deg,#6a00ff,#00d4ff);
+    border-radius: 0 40px 40px 0;
+    transition: width 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* EFECTO CURVA MÁGICA */
+.sidebar::before{
+    content:"";
+    position:absolute;
+    top:0;
+    right:-40px;
+    width:80px;
+    height:100%;
+    background: inherit;
+    border-radius:50%;
+    transition: right 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+/* EXPANSIÓN */
+.sidebar:hover{
+    width: 220px;
+}
+
+.sidebar:hover::before{
+    right:-20px;
+}
+
+/* MENU */
+.menu{
+    list-style:none;
+    padding:0;
+    margin:0;
+    position:relative;
+    top:50%;
+    transform: translateY(-50%);
+}
+
+.menu li{
+    padding:20px;
+    display:flex;
+    align-items:center;
+    color:white;
+    cursor:pointer;
+    transition: background 0.3s;
+}
+
+.menu li:hover{
+    background: rgba(255,255,255,0.2);
+}
+
+.menu i{
+    font-size:20px;
+    min-width:40px;
+    text-align:center;
+}
+
+.menu span{
+    opacity:0;
+    transition: opacity 0.3s;
+    white-space:nowrap;
+}
+
+.sidebar:hover .menu span{
+    opacity:1;
+}
+
 
     /* Fondo de pantalla*/
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}

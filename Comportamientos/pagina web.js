@@ -27,6 +27,22 @@ document.getElementById('btnLogout').addEventListener('click', function() {
   }
 });
 
+// menu
+const list = document.querySelectorAll('.list');
+const indicator = document.querySelector('.indicator');
+
+function activeLink() {
+  list.forEach((item) => item.classList.remove('active'));
+  this.classList.add('active');
+
+  let position = this.offsetTop;
+  indicator.style.top = position + "px";
+}
+
+list.forEach((item) =>
+  item.addEventListener('click', activeLink)
+);
+
 // ================================================================
 //  PRODUCTOS
 // ================================================================
